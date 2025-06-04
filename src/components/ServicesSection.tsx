@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Scale, Heart, Baby, ChevronRight } from "lucide-react";
+import { Users, Scale, ChevronRight, Heart, Baby } from "lucide-react";
 
 export const ServicesSection = () => {
   const services = [
@@ -39,40 +38,6 @@ export const ServicesSection = () => {
       accuracy: "99.99%",
       sampleOptions: ["Chỉ thu mẫu tại cơ sở"],
       color: "green"
-    },
-    {
-      id: 3,
-      icon: Heart,
-      title: "Xét nghiệm tiền hôn nhân",
-      description: "Tầm soát các bệnh di truyền trước khi kết hôn",
-      features: [
-        "Tầm soát thalassemia",
-        "Xét nghiệm G6PD",
-        "Phân tích nhiễm sắc thể",
-        "Tư vấn di truyền"
-      ],
-      price: "1.800.000 - 3.200.000 VNĐ",
-      timeframe: "7-14 ngày",
-      accuracy: "99.9%",
-      sampleOptions: ["Thu mẫu tại nhà", "Thu mẫu tại cơ sở"],
-      color: "purple"
-    },
-    {
-      id: 4,
-      icon: Baby,
-      title: "Xét nghiệm tiền sản",
-      description: "Phát hiện sớm các bất thường di truyền ở thai nhi",
-      features: [
-        "NIPT (Non-invasive)",
-        "Tầm soát Down syndrome",
-        "Phân tích giới tính",
-        "An toàn cho mẹ và bé"
-      ],
-      price: "4.500.000 - 8.000.000 VNĐ",
-      timeframe: "7-10 ngày",
-      accuracy: "99.9%",
-      sampleOptions: ["Chỉ thu mẫu tại cơ sở"],
-      color: "orange"
     }
   ];
 
