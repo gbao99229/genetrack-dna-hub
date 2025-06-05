@@ -2,12 +2,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Menu, Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
 
   const navItems = [
     { name: "Trang chủ", href: "/", icon: Home },
@@ -16,6 +21,23 @@ export const Navigation = () => {
     { name: "Blog", href: "/blog", icon: BookOpen },
     { name: "Liên hệ", href: "/contact", icon: Phone },
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Đăng xuất thành công",
+        description: "Hẹn gặp lại bạn!",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Có lỗi xảy ra khi đăng xuất",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <nav className="bg-white/95 backdrop-blur-sm border-b border-blue-100 sticky top-0 z-50">
@@ -50,14 +72,33 @@ export const Navigation = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm">
-              <LogIn className="w-4 h-4 mr-2" />
-              Đăng nhập
-            </Button>
-            <Button size="sm" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
-              <UserPlus className="w-4 h-4 mr-2" />
-              Đăng ký
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <User className="w-4 h-4" />
+                  <span>{user.email}</span>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Đăng xuất
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="outline" size="sm">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Đăng nhập
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button size="sm" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700">
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Đăng ký
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -87,14 +128,33 @@ export const Navigation = () => {
                   </Link>
                 ))}
                 <div className="pt-4 border-t space-y-3">
-                  <Button variant="outline" className="w-full">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Đăng nhập
-                  </Button>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Đăng ký
-                  </Button>
+                  {user ? (
+                    <>
+                      <div className="flex items-center space-x-2 text-sm text-gray-700 p-2">
+                        <User className="w-4 h-4" />
+                        <span>{user.email}</span>
+                      </div>
+                      <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Đăng xuất
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full">
+                          <LogIn className="w-4 h-4 mr-2" />
+                          Đăng nhập
+                        </Button>
+                      </Link>
+                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
+                          <UserPlus className="w-4 h-4 mr-2" />
+                          Đăng ký
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>
