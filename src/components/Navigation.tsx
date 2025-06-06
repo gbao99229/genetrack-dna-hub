@@ -4,15 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "../context/AuthContext";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { toast } = useToast();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: "Trang chủ", href: "/", icon: Home },
@@ -22,21 +20,9 @@ export const Navigation = () => {
     { name: "Liên hệ", href: "/contact", icon: Phone },
   ];
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Đăng xuất thành công",
-        description: "Hẹn gặp lại bạn!",
-      });
-      navigate("/");
-    } catch (error) {
-      toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi đăng xuất",
-        variant: "destructive",
-      });
-    }
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
   };
 
   return (
