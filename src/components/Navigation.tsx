@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User } from "lucide-react";
+import { Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User, Zap } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -68,6 +68,12 @@ export const Navigation = () => {
               </div>
             ) : (
               <>
+                <Link to="/demo-auth">
+                  <Button variant="outline" size="sm" className="bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100">
+                    <Zap className="w-4 h-4 mr-2" />
+                    Demo Login
+                  </Button>
+                </Link>
                 <Link to="/auth">
                   <Button variant="outline" size="sm">
                     <LogIn className="w-4 h-4 mr-2" />
