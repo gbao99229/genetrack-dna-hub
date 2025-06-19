@@ -1,8 +1,8 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
 import { 
   Calendar, 
   Package, 
@@ -279,16 +279,12 @@ export const ProcessSection = () => {
               Chọn hình thức phù hợp với bạn và bắt đầu hành trình tìm hiểu về mối quan hệ huyết thống
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/booking">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-green-600">
-                  Đặt lịch thu mẫu tại nhà
-                </Button>
-              </Link>
-              <Link to="/booking">
-                <Button size="lg" variant="outline">
-                  Đặt lịch hẹn tại cơ sở
-                </Button>
-              </Link>
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-green-600">
+                Đặt lịch thu mẫu tại nhà
+              </Button>
+              <Button size="lg" variant="outline">
+                Đặt lịch hẹn tại cơ sở
+              </Button>
             </div>
           </div>
         </div>

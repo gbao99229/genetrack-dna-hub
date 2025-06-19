@@ -7,7 +7,6 @@ interface User {
   email: string;
   fullName: string;
   phone?: string;
-  role?: string;
 }
 
 interface AuthContextType {
@@ -19,46 +18,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Demo accounts for testing
-const demoAccounts = [
-  {
-    username: "admin",
-    password: "admin123",
-    userData: {
-      id: "1",
-      username: "admin",
-      email: "admin@dnahealth.vn",
-      fullName: "Quản trị viên",
-      phone: "0901234567",
-      role: "admin"
-    }
-  },
-  {
-    username: "staff",
-    password: "staff123",
-    userData: {
-      id: "2",
-      username: "staff",
-      email: "staff@dnahealth.vn",
-      fullName: "Nguyễn Văn B",
-      phone: "0901234568",
-      role: "staff"
-    }
-  },
-  {
-    username: "customer",
-    password: "customer123",
-    userData: {
-      id: "3",
-      username: "customer",
-      email: "customer@email.com",
-      fullName: "Trần Thị C",
-      phone: "0901234569",
-      role: "customer"
-    }
-  }
-];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -77,39 +36,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (username: string, password: string) => {
     try {
-      // First try demo login
-      const demoAccount = demoAccounts.find(
-        account => account.username === username && account.password === password
-      );
-
-      if (demoAccount) {
-        // Demo login successful
-        localStorage.setItem('authToken', 'demo-token-' + username);
-        localStorage.setItem('userData', JSON.stringify(demoAccount.userData));
-        setUser(demoAccount.userData);
-        return;
-      }
-
-      // If not demo account, try real API
+      // Replace with your API call
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
       
-      if (!response.ok) {
-        // If API fails, check if it's a network error or 404
-        if (response.status === 404) {
-          throw new Error('Tài khoản hoặc mật khẩu không đúng');
-        }
-        throw new Error('Lỗi kết nối server');
-      }
-
       const data = await response.json();
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('userData', JSON.stringify(data.user));
-      setUser(data.user);
       
+      if (response.ok) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        setUser(data.user);
+      } else {
+        throw new Error(data.message || 'Đăng nhập thất bại');
+      }
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -118,40 +60,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (userData: any) => {
     try {
-      // For demo purposes, simulate successful registration
-      const newUser = {
-        id: Date.now().toString(),
-        username: userData.username,
-        email: userData.email,
-        fullName: userData.fullName,
-        phone: userData.phone,
-        role: 'customer'
-      };
-
-      // Try real API first
-      try {
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData),
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('authToken', data.token);
-          localStorage.setItem('userData', JSON.stringify(data.user));
-          setUser(data.user);
-          return;
-        }
-      } catch (apiError) {
-        console.log('API not available, using demo registration');
-      }
-
-      // Fallback to demo registration
-      localStorage.setItem('authToken', 'demo-token-' + userData.username);
-      localStorage.setItem('userData', JSON.stringify(newUser));
-      setUser(newUser);
+      // Replace with your API call
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
       
+      const data = await response.json();
+      
+      if (response.ok) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        setUser(data.user);
+      } else {
+        throw new Error(data.message || 'Đăng ký thất bại');
+      }
     } catch (error) {
       console.error('Register error:', error);
       throw error;

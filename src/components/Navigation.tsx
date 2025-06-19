@@ -1,10 +1,13 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User, Zap } from "lucide-react";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Microscope, UserPlus, LogIn, Home, TestTube, BookOpen, Phone, LogOut, User } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -38,7 +41,7 @@ export const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -54,7 +57,7 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Auth Buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
@@ -68,12 +71,6 @@ export const Navigation = () => {
               </div>
             ) : (
               <>
-                <Link to="/demo-auth">
-                  <Button variant="outline" size="sm" className="bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100">
-                    <Zap className="w-4 h-4 mr-2" />
-                    Demo Login
-                  </Button>
-                </Link>
                 <Link to="/auth">
                   <Button variant="outline" size="sm">
                     <LogIn className="w-4 h-4 mr-2" />
@@ -89,6 +86,65 @@ export const Navigation = () => {
               </>
             )}
           </div>
+
+          {/* Mobile Menu */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="md:hidden">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>DNA Health</SheetTitle>
+                <SheetDescription>
+                  Xét nghiệm ADN huyết thống chuyên nghiệp
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6 space-y-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center space-x-3 text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
+                <div className="pt-4 border-t space-y-3">
+                  {user ? (
+                    <>
+                      <div className="flex items-center space-x-2 text-sm text-gray-700 p-2">
+                        <User className="w-4 h-4" />
+                        <span>{user.username}</span>
+                      </div>
+                      <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Đăng xuất
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full">
+                          <LogIn className="w-4 h-4 mr-2" />
+                          Đăng nhập
+                        </Button>
+                      </Link>
+                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600">
+                          <UserPlus className="w-4 h-4 mr-2" />
+                          Đăng ký
+                        </Button>
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>
